@@ -1,0 +1,23 @@
+---
+title: "script 1"
+author: "sanaa roux"
+date: "5/6/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Présentation des données: vote et carroyage
+```{r}
+library(sf)
+st_read("documents/vote.gpkg")
+data1<-st_read("documents/vote.gpkg")
+str(data1)
+data2<-st_read("documents/insee.gpkg")
+str(data2)
+```
+
+La commande sf me permet d'utiliser la focntion st_read et donc de voir la structure de vote.gpkg et de insee.gpkg. 
+J'ai renommé "vote.gpkg" en "data1" et "insee.gpkg" en "data2" pour faciliter les manipulations. Nous avons donc les données de vote et de carroyage. 
