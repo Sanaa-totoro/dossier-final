@@ -1,0 +1,69 @@
+---
+title: "script 3"
+author: "sanaa roux"
+date: "5/9/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(sf)
+library(mapsf)
+```
+
+```{r}
+library(leaflet)
+leaflet()%>%addTiles()
+```
+
+```{r}
+m<-leaflet()
+m<-addTiles(m)
+m
+```
+```{r}
+library(sf)
+vote<-st_read("vote.gpkg","jointure")
+insee<-st_read("insee.gpkg","bondy")
+```
+Je charge le fichier insee.gpkg et je fais apparaître la couche bondy.
+
+```{r}
+pal<-colorNumeric(
+  palette = "YIOrRd",
+  domain = insee$Men_pauv
+)
+leaflet(insee) %>%
+  addPolygons(color = "#444444", weight = 1, smoothFactor = 0.5,
+    opacity = 1.0, fillOpacity = 0.5,
+    fillColor = ~colorQuantile("YlOrRd",Men_pauv)(Men_pauv),
+    highlightOptions = highlightOptions(color = "white", weight = 2,
+      bringToFront = TRUE)) %>% addLegend("bottomright", pal = pal, values = ~Men_pauv,
+    title = "Ménages pauvres",
+    opacity = 1
+  ) %>% addTiles()
+```
+Je fais les commandes pour pouvoir afficher un carroyage en prenant comme donnée "les ménages pauvres"
+
+```{r}
+inter<-st_intersection(vote,insee)
+summary(inter)
+```
+J'utilise la formule merge pour faire fusionner le vote et le carroyage réalisés
+```{r}
+merge()
+merge(x,y)
+merge(vote,insee)
+```
+
+```{r}
+mf_export(inter, filename ="img/propchoroF.png", width = 1000, res = 200, expandBB = c(0,0,0,0.6))
+mf_map(inter, col = "orange", border = "antiquewhite1")
+mf_map(inter, type ="prop_choro", var = c("vote", "densite"), leg_pos = c("topright", "right"))
+mf_layout("Euh...", credits = "INSEE / PV Electoral\nBondy, avril 2022")
+dev.off()
+```
+Après plusieurs essais, je ne parviens pas à avoir un résultat concluant.
